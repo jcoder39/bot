@@ -1,0 +1,27 @@
+{
+  "http": {
+    "bots": 10,
+    "timeout": 10000,
+    "tasks": [
+      {
+        "url": "http://localhost:8080/rest/example/hello/:name/",
+        "method": "GET",
+        "required": {
+          "name": "generate"
+        },
+        "storage": {
+          "userId@String": "userId"
+        },
+        "repeat": 1
+      },
+      {
+        "url": "http://localhost:8080/rest/example/hello/:userId/",
+        "method": "GET",
+        "required": {
+          "userId": "storage"
+        },
+        "repeat": 1
+      }
+    ]
+  }
+}
