@@ -7,21 +7,20 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by User on 23.07.2016.
  */
-public class HTTPRequestTask extends Task<HTTPResponse> // todo add ssl
+public class HTTPRequestTask extends Task<HTTPResponseTask>
 {
     private String id;
 
     private Bot bot;
 
     @JsonProperty
-    private String url; // todo change to StringBuffer
+    private String url;
 
     @JsonProperty
     private String method;
@@ -55,36 +54,14 @@ public class HTTPRequestTask extends Task<HTTPResponse> // todo add ssl
     }
 
     @Override
-    public HTTPResponse call() throws Exception
+    public HTTPResponseTask call() throws Exception
     {
+        sendTime = System.currentTimeMillis();
         HttpURLConnection connection = null;
 
         try {
-            if(method.equals("GET")){
-                if(required != null || !required.isEmpty()){
-                    required.forEach((param, action) -> {
-                        switch (action){
-                            case "generate": {
-                                url = url.replaceAll(":" + param, id.subSequence(0, 5).toString()); // todo add generator
-                            } break;
-                            case "storage": {
-                                Object object = bot.getStorage().get(param);
-                                url = url.replaceAll(":" + param, (String)object);
-                            }
-                        }
-                    });
-                }
-            } else {
-                // todo add RAW data to post body
-            }
-            sendTime = System.currentTimeMillis();
-            URL requestURL = new URL(url);
-            connection = (HttpURLConnection) requestURL.openConnection();
-            connection.setRequestMethod(method);
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            connection.setUseCaches(false);
-            connection.setDoOutput(true);
+            connection = new HTTPRequest(url, "application/json", method, required, bot.getStorage()).getConnection();
+            url = connection.getURL().toString();
 
             InputStream is = connection.getInputStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
@@ -96,7 +73,7 @@ public class HTTPRequestTask extends Task<HTTPResponse> // todo add ssl
             }
             rd.close();
 
-            return new HTTPResponse(bot, id, url, response.toString(), storage);
+            return new HTTPResponseTask(id, bot, url, response.toString(), storage);
         } catch (Exception e) {
             e.printStackTrace();
             bot.setStop(true);
@@ -112,33 +89,15 @@ public class HTTPRequestTask extends Task<HTTPResponse> // todo add ssl
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getUrl() {
         return url;
     }
 
-    public String getMethod() {
-        return method;
-    }
-
-    public Map<String, String> getRequired() {
-        return required;
-    }
-
-    public Map<String, String> getStorage() {
-        return storage;
-    }
 
     public int getRepeat() {
         return repeat;
     }
 
-    public int getTimeout() {
-        return timeout;
-    }
 
     public long getSendTime() {
         return sendTime;

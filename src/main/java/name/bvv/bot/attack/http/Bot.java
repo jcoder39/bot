@@ -1,6 +1,5 @@
 package name.bvv.bot.attack.http;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -10,7 +9,7 @@ import java.util.TreeMap;
 public class Bot
 {
     private int id;
-    private Map<Integer, ArrayList<RequestResponse>> taskResult;
+    private TreeMap<Integer, TreeMap<Integer, RequestResponse>> taskResult;
     private Storage storage;
     private boolean stop;
 
@@ -22,14 +21,14 @@ public class Bot
 
     public void addTask(Integer index, RequestResponse requestResponse)
     {
-        ArrayList<RequestResponse> requestResponseArrayList;
+        TreeMap<Integer, RequestResponse> requestResponseList;
         if(taskResult.containsKey(index)){
-            requestResponseArrayList = taskResult.get(index);
-            requestResponseArrayList.add(requestResponse);
+            requestResponseList = taskResult.get(index);
+            requestResponseList.put(requestResponseList.lastKey() + 1, requestResponse);
         } else {
-            requestResponseArrayList = new ArrayList<>(5);
-            requestResponseArrayList.add(requestResponse);
-            taskResult.put(index, requestResponseArrayList);
+            requestResponseList = new TreeMap<>();
+            requestResponseList.put(0, requestResponse);
+            taskResult.put(index, requestResponseList);
         }
     }
 
@@ -37,7 +36,7 @@ public class Bot
         return id;
     }
 
-    public ArrayList<RequestResponse> getRequestResponse(Integer index)
+    public TreeMap<Integer, RequestResponse> getRequestResponse(Integer index)
     {
         return taskResult.getOrDefault(index, null);
     }
@@ -54,7 +53,7 @@ public class Bot
         this.stop = stop;
     }
 
-    public Map<Integer, ArrayList<RequestResponse>> getTaskResult() {
+    public TreeMap<Integer, TreeMap<Integer, RequestResponse>> getTaskResult() {
         return taskResult;
     }
 }

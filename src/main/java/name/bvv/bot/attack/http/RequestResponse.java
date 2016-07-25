@@ -1,17 +1,14 @@
 package name.bvv.bot.attack.http;
 
-import name.bvv.bot.attack.http.HTTPRequestTask;
-import name.bvv.bot.attack.http.HTTPResponse;
-
 /**
  * Created by User on 23.07.2016.
  */
 public class RequestResponse
 {
     private HTTPRequestTask requestTask;
-    private HTTPResponse response;
+    private HTTPResponseTask response;
 
-    public RequestResponse(HTTPRequestTask requestTask, HTTPResponse response) {
+    public RequestResponse(HTTPRequestTask requestTask, HTTPResponseTask response) {
         this.requestTask = requestTask;
         this.response = response;
     }
@@ -24,11 +21,11 @@ public class RequestResponse
         this.requestTask = requestTask;
     }
 
-    public HTTPResponse getResponse() {
+    public HTTPResponseTask getResponse() {
         return response;
     }
 
-    public void setResponse(HTTPResponse response) {
+    public void setResponse(HTTPResponseTask response) {
         this.response = response;
     }
 }

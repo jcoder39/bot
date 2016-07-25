@@ -25,23 +25,11 @@ public class Http
         return bots;
     }
 
-    public void setBots(int bots) {
-        this.bots = bots;
-    }
-
     public int getTimeout() {
         return timeout;
     }
 
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
-
     public List<HTTPRequestTask> getTasks() {
         return tasks;
-    }
-
-    public void setTasks(List<HTTPRequestTask> tasks) {
-        this.tasks = tasks;
     }
 }

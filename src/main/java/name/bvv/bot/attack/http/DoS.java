@@ -26,7 +26,7 @@ public class DoS extends Attack
     {
         loadScenario();
         bots = new ArrayList<>(scenario.getHttp().getBots());
-        prepareRequests();
+        prepareHTTPRequestTasks();
     }
 
     private void loadScenario()
@@ -39,7 +39,7 @@ public class DoS extends Attack
         }
     }
 
-    private void prepareRequests()
+    private void prepareHTTPRequestTasks()
     {
         List<HTTPRequestTask> tasks = scenario.getHttp().getTasks();
 
@@ -71,7 +71,7 @@ public class DoS extends Attack
             int repeats = temp.getRepeat();
             for(int repeatIndex = 0; repeatIndex < repeats; repeatIndex++){
 
-                List<Future<HTTPResponse>> answers = new ArrayList<>(scenario.getHttp().getBots());
+                List<Future<HTTPResponseTask>> answers = new ArrayList<>(scenario.getHttp().getBots());
                 List<HTTPRequestTask> preparedTasks = new ArrayList<>(scenario.getHttp().getBots());
 
                 for(Bot bot : bots){
@@ -88,9 +88,9 @@ public class DoS extends Attack
                     e.printStackTrace();
                 }
 
-                for (Future<HTTPResponse> httpResponse : answers) {
+                for (Future<HTTPResponseTask> httpResponse : answers) {
                     try {
-                        HTTPResponse response = httpResponse.get();
+                        HTTPResponseTask response = httpResponse.get();
                         response.setResponseTime(System.currentTimeMillis());
                         response.getBot().getRequestResponse(taskIndex).get(repeatIndex).setResponse(response);
                     } catch (InterruptedException e) {
@@ -103,6 +103,7 @@ public class DoS extends Attack
                         e.printStackTrace();
                     }
                 }
+                System.gc();
             }
         }
 
@@ -115,9 +116,9 @@ public class DoS extends Attack
     {
         bots.forEach((bot) -> {
             bot.getTaskResult().forEach((index, requestResponses) ->{
-                requestResponses.forEach((requestResponse -> {
+                requestResponses.forEach((index1, requestResponse) -> {
                     HTTPRequestTask requestTask = requestResponse.getRequestTask();
-                    HTTPResponse response1 = requestResponse.getResponse();
+                    HTTPResponseTask response1 = requestResponse.getResponse();
                     System.out.println("request: " + requestTask.getUrl());
                     if(response1 != null) {
                         success++;
@@ -129,7 +130,7 @@ public class DoS extends Attack
                         rejects++;
                         System.out.println("response: NULL");
                     }
-                }));
+                });
             });
         });
 

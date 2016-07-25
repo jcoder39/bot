@@ -2,7 +2,6 @@ package name.bvv.bot.attack.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import name.bvv.bot.tasks.Response;
-import name.bvv.bot.attack.http.message.Message;
 
 import java.io.IOException;
 import java.util.Map;
@@ -10,7 +9,7 @@ import java.util.Map;
 /**
  * Created by User on 23.07.2016.
  */
-public class HTTPResponse extends Response
+public class HTTPResponseTask extends Response
 {
     private Bot bot;
     private String requestId;
@@ -20,7 +19,7 @@ public class HTTPResponse extends Response
 
     private long responseTime;
 
-    public HTTPResponse(Bot bot, String requestId, String query, String content, Map<String, String> toStorage)
+    public HTTPResponseTask(String requestId, Bot bot, String query, String content, Map<String, String> toStorage)
             throws IOException, Storage.WrongTypeException
     {
         this.bot = bot;

@@ -1,4 +1,4 @@
-package name.bvv.bot.attack.http.message;
+package name.bvv.bot.attack.http;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
